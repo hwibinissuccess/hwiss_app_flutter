@@ -1,11 +1,11 @@
 import 'package:fast_app_base/screen/main/tab/home/vo/vo_bank.dart';
 
-class BankAccout {
+class BankAccount {
   final Bank bank;
   int balance;
   final String? accountTypeName;
 
-  BankAccout(
+  BankAccount(
     this.bank,
     this.balance, {
     this.accountTypeName,
