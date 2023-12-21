@@ -1,12 +1,15 @@
+import 'package:fast_app_base/common/cli_common.dart';
 import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/common/widget/round_button_theme.dart';
 import 'package:fast_app_base/common/widget/w_round_button.dart';
 import 'package:fast_app_base/common/widget/w_rounded_container.dart';
 import 'package:fast_app_base/screen/dialog/d_message.dart';
+import 'package:fast_app_base/screen/main/s_main.dart';
 import 'package:fast_app_base/screen/main/tab/home/bank_accounts_dumy.dart';
 import 'package:fast_app_base/screen/main/tab/home/w_bank_account.dart';
 import 'package:fast_app_base/screen/main/tab/home/w_hwiss_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../../common/widget/w_big_button.dart';
 import '../../../dialog/d_color_bottom.dart';
@@ -24,31 +27,37 @@ class HomeFragment extends StatelessWidget {
       child: Container(
         child: Stack(
           children: [
-            SingleChildScrollView(
-              padding: EdgeInsets.only(top: 60),
-              child: Column(
-                children: [
-                  BigButton(
-                    "휘스뱅크",
-                    onTap: () {
-                      context.showSnackbar("휘스뱅크를 눌렀다.");
-                    },
-                  ),
-                  height10,
-                  RoundedContainer(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        "자산".text.bold.white.make(),
-                        height5,
-                        ...bankAccounts
-                            .map((e) => BankAccountWidget(e))
-                            .toList(),
-                      ],
+            RefreshIndicator(
+              edgeOffset: HwissAppBar.appBarHeight,
+              onRefresh: () async{
+                await sleepAsync(500.ms);
+              },
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.only(top: HwissAppBar.appBarHeight, bottom: MainScreenState.bottomNavigatorHeight),
+                child: Column(
+                  children: [
+                    BigButton(
+                      "휘스뱅크",
+                      onTap: () {
+                        context.showSnackbar("휘스뱅크를 눌렀다.");
+                      },
                     ),
-                  ),
-                ],
-              ).pSymmetric(h: 20),
+                    height10,
+                    RoundedContainer(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          "자산".text.bold.white.make(),
+                          height5,
+                          ...bankAccounts
+                              .map((e) => BankAccountWidget(e))
+                              .toList(),
+                        ],
+                      ),
+                    ),
+                  ],
+                ).pSymmetric(h: 20),
+              ),
             ),
             const HwissAppBar(),
           ],

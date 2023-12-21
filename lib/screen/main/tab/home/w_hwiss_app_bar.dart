@@ -2,6 +2,9 @@ import 'package:fast_app_base/common/common.dart';
 import 'package:flutter/material.dart';
 
 class HwissAppBar extends StatefulWidget {
+
+  static const double appBarHeight=60;
+
   const HwissAppBar({super.key});
 
   @override
@@ -15,7 +18,7 @@ class _HwissAppBarState extends State<HwissAppBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
+      height: HwissAppBar.appBarHeight,
       color: context.appColors.appBarBackground,
       child: Row(
         children: [
