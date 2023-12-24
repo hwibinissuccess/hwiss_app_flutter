@@ -3,6 +3,7 @@ import 'package:fast_app_base/common/dart/extension/datetime_extension.dart';
 import 'package:fast_app_base/common/data/preference/app_preferences.dart';
 import 'package:fast_app_base/common/widget/w_big_button.dart';
 import 'package:fast_app_base/screen/main/tab/stock/setting/w_switch_menu.dart';
+import 'package:fast_app_base/screen/opensource/s_opensource.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../common/data/preference/prefs.dart';
@@ -55,7 +56,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   lastDate: DateTime.now().add(90.days),
                   initialDate: DateTime.now(),
                 );
-                if(date!= null){
+                if (date != null) {
                   Prefs.birthday.set(date);
                 }
               },
@@ -64,19 +65,23 @@ class _SettingScreenState extends State<SettingScreen> {
 
           //number dialog
           Obx(
-                () => BigButton(
+            () => BigButton(
               '저장된 숫자 ${Prefs.number.get()}',
               onTap: () async {
                 final number = await NumberDialog().show();
-                if(number != null){
+                if (number != null) {
                   Prefs.number.set(number);
                 }
               },
             ),
           ),
 
-          BigButton('오픈소스화면', onTap: ()async{}),
-
+          BigButton(
+            '오픈소스화면',
+            onTap: () async {
+              Nav.push(OpensourceScreen());
+            },
+          ),
         ],
       ),
     );
