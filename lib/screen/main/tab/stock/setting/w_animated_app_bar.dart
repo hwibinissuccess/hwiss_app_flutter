@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 
 class AnimatedAppBar extends StatefulWidget {
   final String title;
-  final ScrollController controller;
+  final ScrollController scrollcontroller;
+  final AnimationController animationController;
 
   const AnimatedAppBar(
     this.title, {
     super.key,
-    required this.controller,
+    required this.scrollcontroller,
+    required this.animationController,
   });
 
   @override
@@ -19,12 +21,21 @@ class AnimatedAppBar extends StatefulWidget {
 class _AnimatedAppBarState extends State<AnimatedAppBar> {
   Duration get duration => 10.ms;
   double scrollPosition = 0;
+  late CurvedAnimation animation =
+      CurvedAnimation(parent: widget.animationController, curve: Curves.bounceInOut);
 
   @override
   void initState() {
-    widget.controller.addListener(() {
+
+    widget.animationController.addListener(() {
       setState(() {
-        scrollPosition = widget.controller.position.pixels;
+
+      });
+    });
+
+    widget.scrollcontroller.addListener(() {
+      setState(() {
+        scrollPosition = widget.scrollcontroller.position.pixels;
       });
     });
     super.initState();
@@ -56,29 +67,55 @@ class _AnimatedAppBarState extends State<AnimatedAppBar> {
                 direction: AxisDirection.left,
               ),
             ).p20(),
-            Positioned.fill(
-              child: Align(
-                alignment: Alignment.topRight,
-                child: TweenAnimationBuilder<Color?>(
-                  duration: 1000.ms,
-                  tween: ColorTween(
-                    begin: Colors.green,
-                    end: isTriggered ? Colors.orange : Colors.green,
+
+            // 커스텀 Implicit Animation, 스크롤에 따라 아이콘 색깔 변하기
+            // Positioned.fill(
+            //   child: Align(
+            //     alignment: Alignment.topRight,
+            //     child: TweenAnimationBuilder<Color?>(
+            //       duration: 1000.ms,
+            //       tween: ColorTween(
+            //         begin: Colors.green,
+            //         end: isTriggered ? Colors.orange : Colors.green,
+            //       ),
+            //       builder: (context, value, child) => ColorFiltered(
+            //         colorFilter: ColorFilter.mode(
+            //           value ?? Colors.green,
+            //           BlendMode.modulate,
+            //         ),
+            //         child: child,
+            //       ),
+            //       child: Image.asset(
+            //         "$basePath/icon/map_point.png",
+            //         height: 60,
+            //       ),
+            //     ),
+            //   ),
+            // ),
+
+            // 커스텀 Explicit Animation, 숫자에 따라 아이콘 이동
+            Positioned(
+              left: animation.value * 200,
+              child: TweenAnimationBuilder<Color?>(
+                duration: 1000.ms,
+                tween: ColorTween(
+                  begin: Colors.green,
+                  end: isTriggered ? Colors.orange : Colors.green,
+                ),
+                builder: (context, value, child) => ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                    value ?? Colors.green,
+                    BlendMode.modulate,
                   ),
-                  builder: (context, value, child) => ColorFiltered(
-                    colorFilter: ColorFilter.mode(
-                      value ?? Colors.green,
-                      BlendMode.modulate,
-                    ),
-                    child: child,
-                  ),
-                  child: Image.asset(
-                    "$basePath/icon/map_point.png",
-                    height: 60,
-                  ),
+                  child: child,
+                ),
+                child: Image.asset(
+                  "$basePath/icon/map_point.png",
+                  height: 60,
                 ),
               ),
             ),
+
             AnimatedContainer(
               duration: duration,
               padding: EdgeInsets.only(

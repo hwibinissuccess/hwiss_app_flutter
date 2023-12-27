@@ -18,9 +18,11 @@ class SettingScreen extends StatefulWidget {
   State<SettingScreen> createState() => _SettingScreenState();
 }
 
-class _SettingScreenState extends State<SettingScreen> {
+class _SettingScreenState extends State<SettingScreen> with SingleTickerProviderStateMixin{
 
-  final  controller = ScrollController();
+  final  scrollController = ScrollController();
+  
+  late final AnimationController animationController = AnimationController(vsync: this, duration: 2000.ms);
 
 
   @override
@@ -29,7 +31,7 @@ class _SettingScreenState extends State<SettingScreen> {
       body: Stack(
         children: [
           ListView(
-            controller: controller,
+            controller: scrollController,
             padding: const EdgeInsets.only(top: 150),
             children: [
               // switch
@@ -89,9 +91,27 @@ class _SettingScreenState extends State<SettingScreen> {
                   Nav.push(OpensourceScreen());
                 },
               ),
+              BigButton(
+                '애니메이션 forward',
+                onTap: () async {
+                  animationController.forward();
+                },
+              ),
+              BigButton(
+                '애니메이션 repeat',
+                onTap: () async {
+                  animationController.reverse();
+                },
+              ),
+              BigButton(
+                '애니메이션 reset',
+                onTap: () async {
+                  animationController.reset();
+                },
+              ),
             ],
           ),
-          AnimatedAppBar('설정',controller: controller)
+          AnimatedAppBar('설정',scrollcontroller: scrollController, animationController: animationController,)
         ],
       ),
     );
