@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../notification/s_notification.dart';
 
 class HwissAppBar extends StatefulWidget {
-
-  static const double appBarHeight=60;
+  static const double appBarHeight = 60;
 
   const HwissAppBar({super.key});
 
@@ -14,8 +13,8 @@ class HwissAppBar extends StatefulWidget {
 }
 
 class _HwissAppBarState extends State<HwissAppBar> {
-
   bool _showRedDot = false;
+  int _tappingCount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -25,14 +24,39 @@ class _HwissAppBarState extends State<HwissAppBar> {
       child: Row(
         children: [
           width10,
-          Image.asset(
-            "$basePath/icon/toss.png",
-            height: 30,
+          // AnimatedContainer(
+          //   duration: 1000.ms,
+          //   height: _tappingCount < 2 ? 60 : 30,
+          //   child: Image.asset(
+          //     "$basePath/icon/toss.png",
+          //   ),
+          // ),
+          AnimatedCrossFade(
+            firstChild: Image.asset(
+              "$basePath/icon/toss.png",
+              height: 30,
+            ),
+            secondChild: Image.asset(
+              "$basePath/icon/map_point.png",
+              height: 30,
+            ),
+            crossFadeState: _tappingCount < 2
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
+            duration: 1500.ms,
           ),
           emptyExpanded,
-          Image.asset(
-            "$basePath/icon/map_point.png",
-            height: 30,
+          // _tappingCount.text.make(),
+          Tap(
+            onTap: () {
+              setState(() {
+                _tappingCount--;
+              });
+            },
+            child: Image.asset(
+              "$basePath/icon/map_point.png",
+              height: 30,
+            ),
           ),
           width10,
           Tap(
@@ -46,21 +70,26 @@ class _HwissAppBarState extends State<HwissAppBar> {
                   "$basePath/icon/notification.png",
                   height: 30,
                 ),
-                if(_showRedDot)Positioned.fill(
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: Container(
-                      width: 6,
-                      height: 6,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.red,
+                if (_showRedDot)
+                  Positioned.fill(
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: Container(
+                        width: 6,
+                        height: 6,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.red,
+                        ),
                       ),
                     ),
                   ),
-                ),
               ],
-            ).animate().shake(duration: 2000.ms, hz: 3).then().fadeOut(duration: 1000.ms),
+            )
+                .animate()
+                .shake(duration: 2000.ms, hz: 3)
+                .then()
+                .fadeOut(duration: 1000.ms),
           ),
           width10,
         ],
