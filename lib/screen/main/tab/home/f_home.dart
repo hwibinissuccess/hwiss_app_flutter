@@ -6,6 +6,7 @@ import 'package:fast_app_base/screen/main/s_main.dart';
 import 'package:fast_app_base/screen/main/tab/home/bank_accounts_dumy.dart';
 import 'package:fast_app_base/screen/main/tab/home/w_bank_account.dart';
 import 'package:fast_app_base/screen/main/tab/home/w_hwiss_app_bar.dart';
+import 'package:fast_app_base/screen/main/tab/home/w_rive_like_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:live_background/live_background.dart';
@@ -15,10 +16,17 @@ import '../../../../common/widget/w_big_button.dart';
 import '../../../dialog/d_color_bottom.dart';
 import '../../../dialog/d_confirm.dart';
 
-class HomeFragment extends StatelessWidget {
+class HomeFragment extends StatefulWidget {
   const HomeFragment({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<HomeFragment> createState() => _HomeFragmentState();
+}
+
+class _HomeFragmentState extends State<HomeFragment> {
+  bool isLike = false;
 
   @override
   Widget build(BuildContext context) {
@@ -27,41 +35,57 @@ class HomeFragment extends StatelessWidget {
       child: Container(
         child: Stack(
           children: [
-            const LiveBackgroundWidget(palette: Palette(colors: [Colors.red, Colors.green]),
-            velocityX: 1,
+            const LiveBackgroundWidget(
+              palette: Palette(colors: [Colors.red, Colors.green]),
+              velocityX: 1,
               particleMaxSize: 20,
             ),
             RefreshIndicator(
               edgeOffset: HwissAppBar.appBarHeight,
-              onRefresh: () async{
+              onRefresh: () async {
                 await sleepAsync(500.ms);
               },
               child: SingleChildScrollView(
-                padding: const EdgeInsets.only(top: HwissAppBar.appBarHeight, bottom: MainScreenState.bottomNavigatorHeight),
-                child: Column(
-                  children: [
-                    BigButton(
-                      "휘스뱅크",
-                      onTap: () {
-                        context.showSnackbar("휘스뱅크를 눌렀다.");
-                      },
-                    ),
-                    height10,
-                    RoundedContainer(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          "자산".text.bold.white.make(),
-                          height5,
-                          ...bankAccounts
-                              .map((e) => BankAccountWidget(e))
-                              .toList(),
-                        ],
+                  padding: const EdgeInsets.only(
+                      top: HwissAppBar.appBarHeight,
+                      bottom: MainScreenState.bottomNavigatorHeight),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 250,
+                        width: 250,
+                        child: RiveLikeButton(
+                          isLike,
+                          onTapLike: (isLike) {
+                            setState(() {
+                              this.isLike = isLike;
+                            });
+                          },
+                        ),
                       ),
-                    ),
-                  ],
-                ).pSymmetric(h: 20).animate().slideY(duration: 1000.ms).fadeIn(),
-              ),
+                      BigButton(
+                        "휘스뱅크",
+                        onTap: () {
+                          context.showSnackbar("휘스뱅크를 눌렀다.");
+                        },
+                      ),
+                      height10,
+                      RoundedContainer(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            "자산".text.bold.white.make(),
+                            height5,
+                            ...bankAccounts
+                                .map((e) => BankAccountWidget(e))
+                                .toList(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ).pSymmetric(h: 20)
+                  //.animate().slideY(duration: 1000.ms).fadeIn(),
+                  ),
             ),
             const HwissAppBar(),
           ],
